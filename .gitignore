@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pkl
+*.sqlite3
+
+# Environment
+.env
+.env.*
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+
+# macOS / Linux
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Bytecode and other garbage
+*.bak
+*.swp
+*.tmp
+
+# Tests
+htmlcov/
+.tox/
+.nox/
+coverage.*
+.cache
+pytest_cache/
+
+# MyPy / Ruff / Pylint / etc.
+.mypy_cache/
+.pytest_cache/
+.dmypy.json
+.pyre/
+
+# Docker
+**/__pycache__/
+docker-compose.override.yml
+*.pid
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
