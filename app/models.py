@@ -1,15 +1,15 @@
 from typing import List, Optional
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel, Column
-from sqlalchemy import Boolean, DateTime, text, Integer, ForeignKey
+from sqlalchemy import Boolean, DateTime, String, text, Integer, ForeignKey
 from datetime import datetime
 
 
 class Post(SQLModel, table=True):
     __tablename__ = "posts"
     id: int = Field(nullable=False, primary_key=True)
-    title: str = Field(nullable=False)
-    content: str = Field(nullable=False)
+    title: str = Field(sa_column=Column(String, nullable=False))
+    content: str = Field(sa_column=Column(String, nullable=False))
     published: Optional[bool] = Field(
         default=True,
         sa_column=Column(Boolean, nullable=False, server_default="true")
@@ -32,8 +32,9 @@ class User(SQLModel, table=True):
     __tablename__ = "users"
 
     id: int = Field(nullable=False, primary_key=True)
-    email: EmailStr = Field(nullable=False, unique=True)
-    password: str = Field(nullable=False)
+    email: EmailStr = Field(sa_column=Column(
+        String, nullable=False, unique=True))
+    password: str = Field(sa_column=Column(String, nullable=False))
     created_at: datetime = Field(
         default_factory=datetime.now,  # Python-side default
         sa_column=Column(
@@ -49,8 +50,8 @@ class User(SQLModel, table=True):
 class Vote(SQLModel, table=True):
     __tablename__ = "votes"
     user_id: int = Field(
-        sa_column=Column(Integer, ForeignKey("users.id"),
-                         primary_key=True, nullable=False)
+        sa_column=Column(Integer, ForeignKey(
+            "users.id", ondelete="CASCADE"), primary_key=True, nullable=False)
     )
     post_id: int = Field(
         sa_column=Column(Integer, ForeignKey(

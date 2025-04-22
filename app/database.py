@@ -1,7 +1,6 @@
 from typing import Annotated
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, create_engine
-from models import Post, User
 from pydantic_settings import BaseSettings
 
 
