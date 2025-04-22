@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from database import create_db_and_tables
+from app.database import create_db_and_tables
 from contextlib import asynccontextmanager
 from routers import post, user, vote
 import auth
