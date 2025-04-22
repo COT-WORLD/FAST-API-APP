@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from app.database import create_db_and_tables
 from contextlib import asynccontextmanager
 from app.routers import post, user, vote
-import app.auth
+import app.auth as auth
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -23,7 +23,7 @@ app.add_middleware(
 
 app.include_router(user.router)
 app.include_router(post.router)
-app.include_router(app.auth.router)
+app.include_router(auth.router)
 app.include_router(vote.router)
 
 

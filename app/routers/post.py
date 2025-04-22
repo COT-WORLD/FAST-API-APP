@@ -1,10 +1,10 @@
 from typing import List, Optional
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlmodel import select
-import app.oauth2
-from database import SessionDep
-from models import Post, Vote
-from schemas import PostCreateUpdate, PostSchema, PostOut
+import app.oauth2 as oauth2
+from app.database import SessionDep
+from app.models import Post, Vote
+from app.schemas import PostCreateUpdate, PostSchema, PostOut
 from sqlalchemy import func
 
 router = APIRouter(

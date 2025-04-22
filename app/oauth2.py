@@ -4,9 +4,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 import jwt
 from sqlmodel import select
-from database import SessionDep, settings
-from schemas import TokenData
-from models import User
+from app.database import SessionDep, settings
+from app.schemas import TokenData
+from app.models import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 

@@ -1,10 +1,10 @@
 from typing import List
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlmodel import select
-from schemas import VoteSchema
-from models import Post, Vote
-from database import SessionDep
-import app.oauth2
+from app.schemas import VoteSchema
+from app.models import Post, Vote
+from app.database import SessionDep
+import app.oauth2 as oauth2
 
 
 router = APIRouter(

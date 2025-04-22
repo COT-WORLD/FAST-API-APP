@@ -1,10 +1,10 @@
 from typing import List
 from fastapi import HTTPException, status, APIRouter
 from sqlmodel import select
-from database import SessionDep
-from models import User
-from schemas import UserBase, UserSchema
-from utils import get_password_hash
+from app.database import SessionDep
+from app.models import User
+from app.schemas import UserBase, UserSchema
+from app.utils import get_password_hash
 
 router = APIRouter(
     prefix="/users", tags=["User"]

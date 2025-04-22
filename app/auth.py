@@ -1,10 +1,10 @@
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlmodel import select
 
-from models import User
-from schemas import Token
-from database import SessionDep
-from utils import verify_password
+from app.models import User
+from app.schemas import Token
+from app.database import SessionDep
+from app.utils import verify_password
 from app.oauth2 import create_access_token
 from fastapi.security import OAuth2PasswordRequestForm
 
