@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[PostOut])
-def get_posts(db: SessionDep, limit: int = 10, offset: int = 0, search: Optional[str] = ""):
+async def get_posts(db: SessionDep, limit: int = 10, offset: int = 0, search: Optional[str] = ""):
 
     query = db.exec(select(Post, func.count(Vote.post_id).label("votes")).join(
         Vote, Vote.post_id == Post.id, isouter=True).group_by(Post.id).filter(Post.title.ilike(f"%{search}%")).limit(limit).offset(offset))
@@ -22,7 +22,7 @@ def get_posts(db: SessionDep, limit: int = 10, offset: int = 0, search: Optional
 
 
 @router.post("/",  status_code=status.HTTP_201_CREATED, response_model=PostSchema)
-def create_post(post_data: PostCreateUpdate, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
+async def create_post(post_data: PostCreateUpdate, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
     new_post = Post(owner_id=current_user.id, **post_data.model_dump())
     db.add(new_post)
     db.commit()
@@ -31,7 +31,7 @@ def create_post(post_data: PostCreateUpdate, db: SessionDep, current_user=Depend
 
 
 @router.get("/{id}", response_model=PostOut)
-def get_post(id: int, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
+async def get_post(id: int, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
     query = db.exec(select(Post, func.count(Vote.post_id).label("votes")).join(
         Vote, Vote.post_id == Post.id, isouter=True).where(Post.id == id).group_by(Post.id))
     post = query.mappings().first()
@@ -42,7 +42,7 @@ def get_post(id: int, db: SessionDep, current_user=Depends(oauth2.get_current_us
 
 
 @router.put("/{id}", response_model=PostSchema)
-def update_post(id: int, post: PostCreateUpdate, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
+async def update_post(id: int, post: PostCreateUpdate, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
 
     existing_post = db.get(Post, id)
 
@@ -62,7 +62,7 @@ def update_post(id: int, post: PostCreateUpdate, db: SessionDep, current_user=De
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
+async def delete_post(id: int, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
     deleted_post = db.get(Post, id)
 
     if not deleted_post:

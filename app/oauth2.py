@@ -40,7 +40,7 @@ def verify_access_token(token: str):
     return token_data
 
 
-def get_current_user(db: SessionDep, token: str = Depends(oauth2_scheme)):
+async def get_current_user(db: SessionDep, token: str = Depends(oauth2_scheme)):
     token = verify_access_token(token)
     user = db.exec(select(User).filter(
         User.id == token.id)).first()

@@ -14,7 +14,7 @@ router = APIRouter(
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_votes(vote: VoteSchema, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
+async def create_votes(vote: VoteSchema, db: SessionDep, current_user=Depends(oauth2.get_current_user)):
 
     post = db.exec(select(Post).filter(Post.id == vote.post_id)).first()
     if not post:
