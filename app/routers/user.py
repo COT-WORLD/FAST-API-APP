@@ -4,6 +4,7 @@ from sqlmodel import select
 from database import SessionDep
 from models import User
 from schemas import UserBase, UserSchema
+from utils import get_password_hash
 
 router = APIRouter(
     prefix="/users", tags=["User"]
@@ -18,6 +19,12 @@ def get_users(db: SessionDep):
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserSchema)
 def create_user(user: UserBase, db: SessionDep):
+    user_exist = db.exec(select(User).filter(User.email == user.email)).first()
+    if user_exist:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                            detail=f"User with email: {user.email} is exist, use diffrent email or login with this email")
+    hashed_password = get_password_hash(user.password)
+    user.password = hashed_password
     new_user = User(**user.model_dump())
     db.add(new_user)
     db.commit()

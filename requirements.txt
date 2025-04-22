@@ -1,5 +1,6 @@
 annotated-types==0.7.0
 anyio==4.9.0
+bcrypt==4.3.0
 certifi==2025.1.31
 click==8.1.8
 colorama==0.4.6
@@ -19,12 +20,14 @@ markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
 orjson==3.10.16
+passlib==1.7.4
 psycopg2==2.9.10
 pydantic==2.11.3
 pydantic-extra-types==2.10.3
 pydantic-settings==2.9.1
 pydantic_core==2.33.1
 Pygments==2.19.1
+PyJWT==2.10.1
 python-dotenv==1.1.0
 python-multipart==0.0.20
 PyYAML==6.0.2

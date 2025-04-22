@@ -1,0 +1,27 @@
+from fastapi import Depends, HTTPException, status, APIRouter
+from sqlmodel import select
+
+from models import User
+from schemas import Token
+from database import SessionDep
+from utils import verify_password
+from oauth2 import create_access_token
+from fastapi.security import OAuth2PasswordRequestForm
+
+router = APIRouter(tags=["Authentication"])
+
+
+@router.post("/login", response_model=Token)
+def login(db: SessionDep, user_credentials: OAuth2PasswordRequestForm = Depends()):
+    user = db.exec(select(User).filter(
+        User.email == user_credentials.username)).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials!")
+    if not verify_password(user_credentials.password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials!")
+    access_token = create_access_token(data={"user_id": user.id})
+
+    return {"access_token": access_token, "token_type": "bearer"}
