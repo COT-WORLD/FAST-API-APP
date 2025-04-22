@@ -1,7 +1,7 @@
 from typing import List, Optional
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlmodel import select
-import oauth2
+import app.oauth2
 from database import SessionDep
 from models import Post, Vote
 from schemas import PostCreateUpdate, PostSchema, PostOut

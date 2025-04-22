@@ -4,7 +4,7 @@ from sqlmodel import select
 from schemas import VoteSchema
 from models import Post, Vote
 from database import SessionDep
-import oauth2
+import app.oauth2
 
 
 router = APIRouter(
