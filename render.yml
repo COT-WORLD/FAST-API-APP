@@ -3,4 +3,4 @@ services:
     name: fastapi-app
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 10000"
+    startCommand: bash -c "alembic upgrade head && pytest -v -s && uvicorn app.main:app --host 0.0.0.0 --port 10000"

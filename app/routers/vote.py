@@ -37,4 +37,4 @@ async def create_votes(vote: VoteSchema, db: SessionDep, current_user=Depends(oa
                                 detail="Vote doesn't found")
         db.delete(already_voted)
         db.commit()
-        return {"message": "Successfully Deleted vote"}
+        return {"message": "Successfully deleted vote"}
