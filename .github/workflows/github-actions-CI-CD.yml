@@ -60,7 +60,14 @@ jobs:
   CD:
     runs-on: ubuntu-latest
     needs: [CI]
-
+    environment:
+      name: Production
     steps:
-      - name: deploying stuff
-        run: echo "Going to check for depolyment in cd"
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: deployment on Render
+        uses: sws2apps/render-deployment@main 
+        with:
+          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
+          apiKey: ${{ secrets.RENDER_API_KEY }}
+          multipleDeployment: false #optional, default true
