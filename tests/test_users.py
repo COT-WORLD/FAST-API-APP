@@ -9,7 +9,8 @@ from app.database import settings
 
 def test_root(client: TestClient):
     res = client.get("/")
-    assert res.json().get('message') == "Hello World Successfully deployed on Render via CICD"
+    assert res.json().get(
+        'message') == "Hello World successfully deployed on Render via CICD pipeline(Github Actions)"
 
 
 def test_create_user(session: Session, client: TestClient):

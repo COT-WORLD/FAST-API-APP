@@ -29,4 +29,4 @@ app.include_router(vote.router)
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello World Successfully deployed on Render via CICD"}
+    return {"message": "Hello World successfully deployed on Render via CICD pipeline(Github Actions)"}
