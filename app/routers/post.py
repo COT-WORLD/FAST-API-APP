@@ -83,8 +83,8 @@ async def update_post(
             detail="Not authorised to perform requsted action",
         )
 
-    hero_data = post.model_dump(exclude_unset=True)
-    existing_post.sqlmodel_update(hero_data)
+    post_data = post.model_dump(exclude_unset=True)
+    existing_post.sqlmodel_update(post_data)
     db.add(existing_post)
     db.commit()
     db.refresh(existing_post)
