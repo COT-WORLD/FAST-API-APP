@@ -1,6 +1,6 @@
 # FAST-API-APP
 
-A modern, scalable, and production-ready FastAPI application designed for managing users, posts, and votes. This project demonstrates best practices in API development, testing, and deployment, making it an excellent showcase for recruiters and collaborators.
+A modern, scalable, and production-ready FastAPI application designed to manage users, posts, and votes with high efficiency. This project leverages best practices in API development, incorporating automated testing, continuous integration, and continuous deployment to ensure reliability and maintainability. It demonstrates a robust architecture for building high-performance APIs, with a focus on security, containerization, and cloud deployment. The application is optimized for real-world use cases, ensuring seamless scalability and ease of maintenance.
 
 ---
 
@@ -12,6 +12,7 @@ A modern, scalable, and production-ready FastAPI application designed for managi
 - **Authentication**: Secure user authentication using OAuth2 and JWT tokens.
 - **Database Integration**: SQLModel and Alembic for database modeling and migrations.
 - **Testing**: Comprehensive unit and integration tests using `pytest`.
+- **OWASP Top 10 Security**: This project incorporates key OWASP Top 10 security practices, such as secure authentication using OAuth2 and JWT, preventing SQL injection through SQLModel, and enforcing proper access control to ensure users can only interact with their own data. Tests are included to validate these protections and ensure the application is resilient to common security vulnerabilities..
 - **Containerization**: Docker support for seamless development and production environments.
 - **CI/CD**: Automated testing and deployment pipelines using GitHub Actions and Render.
 - **API Documentation**: Interactive API documentation with Swagger UI and ReDoc.
@@ -207,6 +208,7 @@ This project uses GitHub Actions for automated testing and deployment:
 | Variable                      | Description                      |
 | ----------------------------- | -------------------------------- |
 | `DATABASE_URL`                | Database connection URL          |
+| `TEST_DATABASE_URL`           | Test Database connection URL     |
 | `SECRET_KEY`                  | Secret key for JWT               |
 | `ALGORITHM`                   | Algorithm for JWT                |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiration time in minutes |
@@ -218,3 +220,7 @@ This project is licensed under the [MIT License](LICENSE).
 ```
 
 ```
+
+## 👨‍💻 Author
+
+COT_WORLD: A passionate software developer who loves building scalable and efficient applications. Connect with me on [LinkedIn](https://www.linkedin.com/in/hardik-chaudhary/).
