@@ -20,7 +20,6 @@ async def create_votes(vote: VoteSchema, db: SessionDep, current_user=Depends(oa
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {vote.post_id} doesn't exist")
-
     already_voted = db.exec(select(Vote).filter(
         Vote.post_id == vote.post_id, Vote.user_id == current_user.id)).first()
     if vote.dir == 1:
@@ -34,7 +33,7 @@ async def create_votes(vote: VoteSchema, db: SessionDep, current_user=Depends(oa
     else:
         if not already_voted:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail="Vote doesn't found")
+                                detail="Vote not found")
         db.delete(already_voted)
         db.commit()
         return {"message": "Successfully deleted vote"}

@@ -6,6 +6,7 @@ from app.database import SessionDep
 from app.models import Post, Vote
 from app.schemas import PostCreateUpdate, PostSchema, PostOut
 from sqlalchemy import func
+from app.utils import sanitize_input
 
 router = APIRouter(prefix="/posts", tags=["Post"])
 
@@ -37,6 +38,8 @@ async def create_post(
     db: SessionDep,
     current_user=Depends(oauth2.get_current_user),
 ):
+    post_data.title = sanitize_input(post_data.title)
+    post_data.content = sanitize_input(post_data.content)
     new_post = Post(owner_id=current_user.id, **post_data.model_dump())
     db.add(new_post)
     db.commit()
@@ -58,7 +61,7 @@ async def get_post(
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"post with id: {id} doesn't exist",
+            detail=f"post with id: {id} was not exist",
         )
     return post
 
@@ -75,14 +78,17 @@ async def update_post(
     if not existing_post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"post with id: {id} doesn't found",
+            detail=f"post with id: {id} was not found",
         )
     if existing_post.owner_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authorised to perform requsted action",
         )
-
+    if post.title:
+        post.title = sanitize_input(post.title)
+    if post.content:
+        post.content = sanitize_input(post.content)
     post_data = post.model_dump(exclude_unset=True)
     existing_post.sqlmodel_update(post_data)
     db.add(existing_post)
@@ -100,7 +106,7 @@ async def delete_post(
     if not deleted_post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"post with id: {id} doesn't found",
+            detail=f"post with id: {id} was not found",
         )
     if deleted_post.owner_id != current_user.id:
         raise HTTPException(
@@ -110,4 +116,4 @@ async def delete_post(
 
     db.delete(deleted_post)
     db.commit()
-    return deleted_post
+    return
