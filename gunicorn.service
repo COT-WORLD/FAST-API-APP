@@ -1,0 +1,16 @@
+[Unit]
+Description=FastAPI App Service
+After=network.target
+
+[Service]
+User=cot_user
+Group=cot_user
+WorkingDirectory=/home/cot_user/app/src/
+Environment="PATH=/home/cot_user/app/venv/bin"
+EnvironmentFile=/home/cot_user/.env
+ExecStart=/home/cot_user/app/venv/bin/gunicron -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
