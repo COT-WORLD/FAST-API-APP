@@ -1,4 +1,5 @@
 alembic==1.16.4
+annotated-doc==0.0.3
 annotated-types==0.7.0
 anyio==4.10.0
 Authlib==1.6.5
@@ -13,7 +14,7 @@ cryptography==45.0.6
 dnspython==2.7.0
 dparse==0.6.4
 email_validator==2.2.0
-fastapi==0.116.1
+fastapi==0.120.2
 fastapi-cli==0.0.8
 filelock==3.16.1
 greenlet==3.2.4
