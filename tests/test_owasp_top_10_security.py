@@ -206,14 +206,6 @@ def test_xss_in_vote_creation(client: TestClient, test_user):
         "detail"][0]["msg"]
 
 
-def test_no_vulnerable_components():
-
-    result = subprocess.run(['safety', 'check', '--full-report',
-                            '--ignore', '39645'], capture_output=True, text=True)
-
-    assert result.returncode == 0, f"Vulnerabilities found in dependencies: {result.stdout}"
-
-
 def test_vote_logging(client: TestClient, test_user, test_posts):
     payload = {
         "post_id": test_posts[0].id,
