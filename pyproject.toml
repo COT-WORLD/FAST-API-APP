@@ -7,7 +7,6 @@ authors = [
 ]
 package-mode = false
 license = {text = "MIT"}
-readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "alembic (==1.16.4)",

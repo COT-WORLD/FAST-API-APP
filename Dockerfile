@@ -7,7 +7,7 @@ RUN pip install poetry
 COPY pyproject.toml poetry.lock ./
 
 RUN poetry config virtualenvs.in-project true && \
-    poetry install --no-interaction
+    poetry install --no-root --no-interaction
 
 FROM python:3.12.1-slim
 
