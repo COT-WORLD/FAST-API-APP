@@ -5,6 +5,7 @@ description = "A modern, scalable FastAPI application for managing users, posts,
 authors = [
     {name = "COT-WORLD",email = "hardikchaudhary.aus@gmail.com"}
 ]
+package-mode = false
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.12"
