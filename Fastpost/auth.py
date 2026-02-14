@@ -1,11 +1,11 @@
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlmodel import select
 
-from app.models import User
-from app.schemas import Token
-from app.database import SessionDep
-from app.utils import verify_password
-from app.oauth2 import create_access_token
+from Fastpost.models import User
+from Fastpost.schemas import Token
+from Fastpost.database import SessionDep
+from Fastpost.utils import verify_password
+from Fastpost.oauth2 import create_access_token
 from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(tags=["Authentication"])

@@ -1,11 +1,11 @@
 import pytest
 from sqlmodel import SQLModel, select
-from app.main import app
-from app.database import settings, get_session
+from Fastpost.main import app
+from Fastpost.database import settings, get_session
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
-from app.models import Post
-from app.oauth2 import create_access_token
+from Fastpost.models import Post
+from Fastpost.oauth2 import create_access_token
 
 
 @pytest.fixture(name="session", scope="function")
@@ -26,6 +26,7 @@ def client_fixture(session: Session):
     yield client
     app.dependency_overrides.clear()
 
+
 @pytest.fixture(name="test_user")
 def test_user(client):
     res = client.post("/users/", json={
@@ -36,6 +37,7 @@ def test_user(client):
     new_user = res.json()
     new_user["password"] = "password123"
     return new_user
+
 
 @pytest.fixture(name="test_user2")
 def test_user2(client):
@@ -48,9 +50,11 @@ def test_user2(client):
     new_user["password"] = "password123"
     return new_user
 
+
 @pytest.fixture(name="token")
 def token(test_user):
     return create_access_token({"user_id": test_user["id"]})
+
 
 @pytest.fixture(name="authorised_client")
 def authorised_client(client, token):
@@ -73,7 +77,7 @@ def test_posts(test_user, test_user2, session):
         "content": "Third Content",
         "owner_id": test_user["id"]
     },
-    {
+        {
         "title": "Four title",
         "content": "Four Content",
         "owner_id": test_user2["id"]
@@ -87,5 +91,5 @@ def test_posts(test_user, test_user2, session):
     posts = list(post_map)
     session.add_all(posts)
     session.commit()
-    posts=session.exec(select(Post)).all()
+    posts = session.exec(select(Post)).all()
     return posts

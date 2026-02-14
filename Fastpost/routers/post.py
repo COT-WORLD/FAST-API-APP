@@ -1,12 +1,12 @@
 from typing import List, Optional
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlmodel import select
-import app.oauth2 as oauth2
-from app.database import SessionDep
-from app.models import Post, Vote
-from app.schemas import PostCreateUpdate, PostSchema, PostOut
+import Fastpost.oauth2 as oauth2
+from Fastpost.database import SessionDep
+from Fastpost.models import Post, Vote
+from Fastpost.schemas import PostCreateUpdate, PostSchema, PostOut
 from sqlalchemy import func
-from app.utils import sanitize_input
+from Fastpost.utils import sanitize_input
 
 router = APIRouter(prefix="/posts", tags=["Post"])
 

@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 import pytest
 
-from app.models import Vote
+from Fastpost.models import Vote
 
 
 @pytest.fixture(name="test_vote")

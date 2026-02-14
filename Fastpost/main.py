@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from app.database import create_db_and_tables
+from Fastpost.database import create_db_and_tables
 from contextlib import asynccontextmanager
-from app.routers import post, user, vote
-import app.auth as auth
+from Fastpost.routers import post, user, vote
+import Fastpost.auth as auth
 from fastapi.middleware.cors import CORSMiddleware
 
 

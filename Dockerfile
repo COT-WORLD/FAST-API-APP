@@ -2,10 +2,20 @@ FROM python:3.12.1
 
 WORKDIR /usr/src/app
 
-COPY requirements.txt ./
+RUN pip install poetry
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml poetry.lock ./
+
+RUN poetry config virtualenvs.in-project true && poetry install --without dev --no-interaction
+
+FROM python:3.12.1-slim
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app/.venv ./.venv
 
 COPY . .
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENV PATH="/usr/src/app/.venv/bin:$PATH"
+
+CMD ["uvicorn", "Fastpost.main:app", "--host", "0.0.0.0", "--port", "8000"]

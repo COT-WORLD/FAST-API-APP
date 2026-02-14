@@ -1,10 +1,10 @@
 import pytest
 import time
 from fastapi.testclient import TestClient
-from app.models import User, Post
-from app.schemas import Token
-from app.database import SessionDep
-from app.oauth2 import create_access_token
+from Fastpost.models import User, Post
+from Fastpost.schemas import Token
+from Fastpost.database import SessionDep
+from Fastpost.oauth2 import create_access_token
 from sqlmodel import select
 import subprocess
 

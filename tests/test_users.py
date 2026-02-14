@@ -1,10 +1,10 @@
 from fastapi.testclient import TestClient
 import jwt
 import pytest
-from app.schemas import UserSchema, Token
+from Fastpost.schemas import UserSchema, Token
 from fastapi.testclient import TestClient
 from sqlmodel import Session
-from app.database import settings
+from Fastpost.database import settings
 
 
 def test_root(client: TestClient):

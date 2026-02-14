@@ -1,6 +1,6 @@
 import time
 from fastapi.testclient import TestClient
-from app.oauth2 import create_access_token
+from Fastpost.oauth2 import create_access_token
 
 
 def test_performance_under_load(client: TestClient, test_user):
