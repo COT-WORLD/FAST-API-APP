@@ -1,4 +1,4 @@
-FROM python:3.12.1 as builder
+FROM python:3.12.1 AS builder
 
 WORKDIR /usr/src/app
 
@@ -6,7 +6,8 @@ RUN pip install poetry
 
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry config virtualenvs.in-project true && poetry install --without dev --no-interaction
+RUN poetry config virtualenvs.in-project true && \
+    poetry install --no-interaction
 
 FROM python:3.12.1-slim
 
