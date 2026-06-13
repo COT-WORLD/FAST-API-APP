@@ -59,19 +59,19 @@ A modern, scalable, and production-ready FastAPI application designed to manage 
 
 ## 🧪 Testing
 
-## This project includes a robust test suite to ensure the reliability of the application. Both **unit tests** and **integration tests** are implemented to validate individual components and their interactions.
+### This project includes a robust test suite to ensure the reliability of the application. Both **unit tests** and **integration tests** are implemented to validate individual components and their interactions.
 
 ### Running Tests
 
 1. Install the required dependencies:
 
    ```bash
-   pip install -r requirements.txt
+   pip install poetry && poetry config virtualenvs.in-project true && poetry install --no-root --no-interaction
    ```
 
 2. Run the test suite:
    ```bash
-   pytest -v -s
+   poetry run pytest -v -s
    ```
 
 ### Test Coverage
@@ -160,13 +160,13 @@ def test_create_post_and_vote(client, test_user, token_headers):
 2. Install dependencies:
 
    ```bash
-   pip install -r requirements.txt
+   pip install poetry && poetry config virtualenvs.in-project true && poetry install --no-root --no-interaction
    ```
 
 3. Run database migrations:
 
    ```bash
-   alembic upgrade head
+   poetry run alembic upgrade head
    ```
 
 4. Start the application:
@@ -194,7 +194,6 @@ def test_create_post_and_vote(client, test_user, token_headers):
 This project uses GitHub Actions for automated testing and deployment:
 
 1. **Continuous Integration (CI)**:
-
    - Runs tests on every push or pull request.
    - Ensures code quality and reliability.
 
@@ -216,10 +215,6 @@ This project uses GitHub Actions for automated testing and deployment:
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
-
-```
-
-```
 
 ## 👨‍💻 Author
 

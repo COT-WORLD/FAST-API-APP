@@ -1,15 +1,18 @@
-from fastapi import FastAPI
-from Fastpost.database import create_db_and_tables
 from contextlib import asynccontextmanager
-from Fastpost.routers import post, user, vote
-import Fastpost.auth as auth
+
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+import Fastpost.auth as auth
+from Fastpost.database import create_db_and_tables
+from Fastpost.routers import post, user, vote
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db_and_tables()
     yield
+
 
 app = FastAPI(lifespan=lifespan)
 
@@ -29,4 +32,6 @@ app.include_router(vote.router)
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello World successfully deployed on Render via CICD pipeline(Github Actions)"}
+    return {
+        "message": "Hello World successfully deployed on Render via CICD pipeline(Github Actions)"
+    }

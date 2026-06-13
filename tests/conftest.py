@@ -1,9 +1,9 @@
 import pytest
-from sqlmodel import SQLModel, select
-from Fastpost.main import app
-from Fastpost.database import settings, get_session
 from fastapi.testclient import TestClient
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import Session, SQLModel, create_engine, select
+
+from Fastpost.database import get_session, settings
+from Fastpost.main import app
 from Fastpost.models import Post
 from Fastpost.oauth2 import create_access_token
 
@@ -21,6 +21,7 @@ def session_fixture():
 def client_fixture(session: Session):
     def get_session_override():
         return session
+
     app.dependency_overrides[get_session] = get_session_override
     client = TestClient(app)
     yield client
@@ -29,10 +30,9 @@ def client_fixture(session: Session):
 
 @pytest.fixture(name="test_user")
 def test_user(client):
-    res = client.post("/users/", json={
-        "email": "james@gmail.com",
-        "password": "password123"
-    })
+    res = client.post(
+        "/users/", json={"email": "james@gmail.com", "password": "password123"}
+    )
     assert res.status_code == 201
     new_user = res.json()
     new_user["password"] = "password123"
@@ -41,10 +41,9 @@ def test_user(client):
 
 @pytest.fixture(name="test_user2")
 def test_user2(client):
-    res = client.post("/users/", json={
-        "email": "ann@gmail.com",
-        "password": "password123"
-    })
+    res = client.post(
+        "/users/", json={"email": "ann@gmail.com", "password": "password123"}
+    )
     assert res.status_code == 201
     new_user = res.json()
     new_user["password"] = "password123"
@@ -64,24 +63,28 @@ def authorised_client(client, token):
 
 @pytest.fixture(name="test_posts")
 def test_posts(test_user, test_user2, session):
-    post_data = [{
-        "title": "First title",
-        "content": "First Content",
-        "owner_id": test_user["id"]
-    }, {
-        "title": "Second title",
-        "content": "Second Content",
-        "owner_id": test_user["id"]
-    }, {
-        "title": "Third title",
-        "content": "Third Content",
-        "owner_id": test_user["id"]
-    },
+    post_data = [
         {
-        "title": "Four title",
-        "content": "Four Content",
-        "owner_id": test_user2["id"]
-    }]
+            "title": "First title",
+            "content": "First Content",
+            "owner_id": test_user["id"],
+        },
+        {
+            "title": "Second title",
+            "content": "Second Content",
+            "owner_id": test_user["id"],
+        },
+        {
+            "title": "Third title",
+            "content": "Third Content",
+            "owner_id": test_user["id"],
+        },
+        {
+            "title": "Four title",
+            "content": "Four Content",
+            "owner_id": test_user2["id"],
+        },
+    ]
 
     def create_post_model(post):
         return Post(**post)

@@ -1,11 +1,13 @@
 from typing import List, Optional
-from fastapi import Depends, HTTPException, status, APIRouter
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import func
 from sqlmodel import select
+
 import Fastpost.oauth2 as oauth2
 from Fastpost.database import SessionDep
 from Fastpost.models import Post, Vote
-from Fastpost.schemas import PostCreateUpdate, PostSchema, PostOut
-from sqlalchemy import func
+from Fastpost.schemas import PostCreateUpdate, PostOut, PostSchema
 from Fastpost.utils import sanitize_input
 
 router = APIRouter(prefix="/posts", tags=["Post"])

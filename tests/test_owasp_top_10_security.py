@@ -1,58 +1,60 @@
-import pytest
 import time
+
+import pytest
 from fastapi.testclient import TestClient
-from Fastpost.models import User, Post
-from Fastpost.schemas import Token
-from Fastpost.database import SessionDep
-from Fastpost.oauth2 import create_access_token
 from sqlmodel import select
-import subprocess
+
+from Fastpost.database import SessionDep
+from Fastpost.models import Post, User
+from Fastpost.oauth2 import create_access_token
+from Fastpost.schemas import Token
 
 
-@pytest.mark.parametrize("email, password, status_code", [
-    ("wrongemail@gmail.com", "password123", 403),
-    ("james@gmail.com", "wrongpassword", 403),
-    ("wrongemail@gmail.com", "wrongpassword", 403),
-    (None, "password123", 403),
-    ("wrongemail@gmail.com", None, 403)
-])
+@pytest.mark.parametrize(
+    "email, password, status_code",
+    [
+        ("wrongemail@gmail.com", "password123", 403),
+        ("james@gmail.com", "wrongpassword", 403),
+        ("wrongemail@gmail.com", "wrongpassword", 403),
+        (None, "password123", 403),
+        ("wrongemail@gmail.com", None, 403),
+    ],
+)
 def test_invalid_login(client: TestClient, email, password, status_code):
-    res = client.post("/login", data={
-        "username": email,
-        "password": password
-    })
+    res = client.post("/login", data={"username": email, "password": password})
     assert res.status_code == status_code
     if res.status_code != 200:
         assert res.json().get("detail") == "Invalid Credentials!"
 
 
-@pytest.mark.skip(reason="Skipped to avoid long wait times; token expiry logic is assumed to be tested separately or with configurable TTL.")
+@pytest.mark.skip(
+    reason="Skipped to avoid long wait times; token expiry logic is assumed to be tested separately or with configurable TTL."
+)
 def test_token_expiry(client: TestClient, test_user):
-    res = client.post("/login", data={
-        "username": test_user['email'],
-        "password": "password123"
-    })
+    res = client.post(
+        "/login", data={"username": test_user["email"], "password": "password123"}
+    )
     login_res = Token(**res.json())
     access_token = login_res.access_token
     time.sleep(65)
-    res = client.get(
-        "/posts/", headers={"Authorization": f"Bearer {access_token}"})
+    res = client.get("/posts/", headers={"Authorization": f"Bearer {access_token}"})
     assert res.status_code == 401
     assert res.json().get("detail") == "Not authenticated"
 
 
 def test_sql_injection_in_user_creation(client: TestClient):
-    payload = {"email": "james@gmail.com' OR '1'='1",
-               "password": "password123"}
+    payload = {"email": "james@gmail.com' OR '1'='1", "password": "password123"}
     res = client.post("/users/", json=payload)
     assert res.status_code == 422
 
 
-def test_access_control_on_post_deletion(client: TestClient, test_user, test_user2, session):
+def test_access_control_on_post_deletion(
+    client: TestClient, test_user, test_user2, session
+):
     post = Post(
         title="Protected Post",
         content="Only owner should delete this",
-        owner_id=test_user2["id"]
+        owner_id=test_user2["id"],
     )
     session.add(post)
     session.commit()
@@ -60,8 +62,7 @@ def test_access_control_on_post_deletion(client: TestClient, test_user, test_use
 
     token = create_access_token({"user_id": test_user["id"]})
     res = client.delete(
-        f"/posts/{post.id}",
-        headers={"Authorization": f"Bearer {token}"}
+        f"/posts/{post.id}", headers={"Authorization": f"Bearer {token}"}
     )
 
     assert res.status_code == 401
@@ -93,8 +94,7 @@ def test_unauthorized_access_to_post(client: TestClient, test_posts, test_user):
 
 def test_password_hashing(client: TestClient, session: SessionDep, test_user):
 
-    user = session.exec(select(User).filter(
-        User.email == test_user['email'])).first()
+    user = session.exec(select(User).filter(User.email == test_user["email"])).first()
     assert user is not None
     assert user.password != "password123"
 
@@ -109,13 +109,11 @@ def test_xss_in_post_content(client: TestClient, test_user):
     token = create_access_token({"user_id": test_user["id"]})
     payload = {
         "title": "<script>alert('XSS')</script>",
-        "content": "<img src=x onerror=alert('XSS')>"
+        "content": "<img src=x onerror=alert('XSS')>",
     }
 
     res = client.post(
-        "/posts/",
-        json=payload,
-        headers={"Authorization": f"Bearer {token}"}
+        "/posts/", json=payload, headers={"Authorization": f"Bearer {token}"}
     )
     assert res.status_code == 201
     data = res.json()
@@ -124,26 +122,22 @@ def test_xss_in_post_content(client: TestClient, test_user):
 
 
 def test_sql_injection_in_vote_creation(client: TestClient, test_user):
-    payload = {
-        "post_id": "1; DROP TABLE votes; --",
-        "dir": 1
-    }
-    token = create_access_token({"user_id": test_user['id']})
-    res = client.post("/vote/", json=payload,
-                      headers={"Authorization": f"Bearer {token}"})
+    payload = {"post_id": "1; DROP TABLE votes; --", "dir": 1}
+    token = create_access_token({"user_id": test_user["id"]})
+    res = client.post(
+        "/vote/", json=payload, headers={"Authorization": f"Bearer {token}"}
+    )
     assert res.status_code == 422
     assert res.json()["detail"][0]["type"] == "int_parsing"
 
 
 def test_sensitive_data_exposure_in_vote(client: TestClient, test_user, test_posts):
 
-    payload = {
-        "post_id": test_posts[0].id,
-        "dir": 1
-    }
-    token = create_access_token({"user_id": test_user['id']})
-    res = client.post("/vote/", json=payload,
-                      headers={"Authorization": f"Bearer {token}"})
+    payload = {"post_id": test_posts[0].id, "dir": 1}
+    token = create_access_token({"user_id": test_user["id"]})
+    res = client.post(
+        "/vote/", json=payload, headers={"Authorization": f"Bearer {token}"}
+    )
 
     assert res.status_code == 201
     assert "password" not in res.text
@@ -151,10 +145,6 @@ def test_sensitive_data_exposure_in_vote(client: TestClient, test_user, test_pos
 
 
 def test_prevent_xxe_in_vote(client: TestClient, test_user):
-    payload = {
-        "post_id": 1,
-        "dir": 1
-    }
 
     xml_payload = """<?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE foo [ 
@@ -164,9 +154,10 @@ def test_prevent_xxe_in_vote(client: TestClient, test_user):
     <foo>&xxe;</foo>
     """
 
-    token = create_access_token({"user_id": test_user['id']})
-    res = client.post("/vote/", content=xml_payload,
-                      headers={"Authorization": f"Bearer {token}"})
+    token = create_access_token({"user_id": test_user["id"]})
+    res = client.post(
+        "/vote/", content=xml_payload, headers={"Authorization": f"Bearer {token}"}
+    )
 
     assert res.status_code == 422
     assert res.json()["detail"][0]["type"] == "json_invalid"
@@ -174,13 +165,11 @@ def test_prevent_xxe_in_vote(client: TestClient, test_user):
 
 def test_unauthorized_user_vote(client: TestClient, test_user, test_posts):
 
-    payload = {
-        "post_id": test_posts[0].id,
-        "dir": 1
-    }
-    token = create_access_token({"user_id":  100})
-    res = client.post("/vote/", json=payload,
-                      headers={"Authorization": f"Bearer {token}"})
+    payload = {"post_id": test_posts[0].id, "dir": 1}
+    token = create_access_token({"user_id": 100})
+    res = client.post(
+        "/vote/", json=payload, headers={"Authorization": f"Bearer {token}"}
+    )
 
     assert res.status_code == 401
 
@@ -191,27 +180,25 @@ def test_exposed_sensitive_vote_endpoint(client: TestClient):
 
 
 def test_xss_in_vote_creation(client: TestClient, test_user):
-    payload = {
-        "post_id": 1,
-        "dir": 1
-    }
+    payload = {"post_id": 1, "dir": 1}
     payload["post_id"] = "<script>alert('XSS')</script>"
-    token = create_access_token({"user_id": test_user['id']})
+    token = create_access_token({"user_id": test_user["id"]})
 
-    res = client.post("/vote/", json=payload,
-                      headers={"Authorization": f"Bearer {token}"})
+    res = client.post(
+        "/vote/", json=payload, headers={"Authorization": f"Bearer {token}"}
+    )
     assert res.status_code == 422
     assert "detail" in res.json()
-    assert "Input should be a valid integer, unable to parse string as an integer" in res.json()[
-        "detail"][0]["msg"]
+    assert (
+        "Input should be a valid integer, unable to parse string as an integer"
+        in res.json()["detail"][0]["msg"]
+    )
 
 
 def test_vote_logging(client: TestClient, test_user, test_posts):
-    payload = {
-        "post_id": test_posts[0].id,
-        "dir": 1
-    }
-    token = create_access_token({"user_id": test_user['id']})
-    res = client.post("/vote/", json=payload,
-                      headers={"Authorization": f"Bearer {token}"})
+    payload = {"post_id": test_posts[0].id, "dir": 1}
+    token = create_access_token({"user_id": test_user["id"]})
+    res = client.post(
+        "/vote/", json=payload, headers={"Authorization": f"Bearer {token}"}
+    )
     assert res.status_code == 201

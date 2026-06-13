@@ -1,5 +1,6 @@
 import bleach
 from passlib.context import CryptContext
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALLOWED_TAGS = []
 ALLOWED_ATTRIBUTES = {}
@@ -14,4 +15,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def sanitize_input(text: str) -> str:
-    return bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True)
+    return bleach.clean(
+        text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True
+    )

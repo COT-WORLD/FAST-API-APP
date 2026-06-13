@@ -1,14 +1,15 @@
 from datetime import datetime
-from pydantic import BaseModel, EmailStr, ConfigDict
-from sqlmodel import SQLModel, Field
-from pydantic import model_validator
 from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, EmailStr, model_validator
+from sqlmodel import Field, SQLModel
 
 
 class UserBase(SQLModel):
     email: EmailStr
     password: str
     model_config = ConfigDict(from_attributes=True)
+
 
 class UserSchema(SQLModel):
     id: int
@@ -44,6 +45,7 @@ class TokenData(BaseModel):
     id: Optional[int] = None
     model_config = ConfigDict(from_attributes=True)
 
+
 class VoteSchema(SQLModel):
     post_id: int
     dir: int = Field(default=0)
@@ -54,6 +56,7 @@ class VoteSchema(SQLModel):
         if dir_value not in (0, 1):
             raise ValueError("dir must be 0 or 1")
         return values
+
     model_config = ConfigDict(from_attributes=True)
 
 

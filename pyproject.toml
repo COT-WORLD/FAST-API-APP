@@ -50,7 +50,6 @@ dependencies = [
     "passlib (==1.7.4)",
     "pluggy (==1.6.0)",
     "psutil (==6.1.1)",
-    "psycopg2 (==2.9.10)",
     "pycparser (==2.22)",
     "pydantic (==2.9.2)",
     "pydantic-extra-types (==2.10.5)",
@@ -86,7 +85,8 @@ dependencies = [
     "watchfiles (==1.1.0)",
     "webencodings (==0.5.1)",
     "websockets (==15.0.1)",
-    "wheel (==0.46.3)"
+    "wheel (==0.46.3)",
+    "psycopg2-binary (>=2.9.12,<3.0.0)"
 ]
 
 

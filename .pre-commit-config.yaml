@@ -1,0 +1,19 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.16
+    hooks:
+      # 1. Run the linter, explicitly including import sorting (I) and fixing them
+      - id: ruff-check
+        args: [--extend-select, I, --fix]
+
+      # 2. Run the formatter
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: pytest-local
+        name: Run pytest inside virtual environment in local
+        entry: pytest -v -x --color=yes -s
+        language: system
+        pass_filenames: false
+        always_run: true

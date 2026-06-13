@@ -7,20 +7,23 @@ services:
       - 8000:8000
     volumes:
       - ./:/usr/src/app:ro
+      - /usr/src/app/.venv/
     command: uvicorn Fastpost.main:app --host 0.0.0.0 --port 8000 --reload
-    # env_file:
-    #     - .env
+    env_file:
+      - .env
     environment:
       - DATABASE_URL=postgresql://postgres:password123@postgres/fastapi_db
       - SECRET_KEY=70601a560c681608ee9dbac1a22
-      - ALGORITHM =HS256
-      - ACCESS_TOKEN_EXPIRE_MINUTES = 60
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
   postgres:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=password123
       - POSTGRES_DB=fastapi_db
+    ports:
+      - 5432:5432
     volumes:
-      - postgres-db:/var/lib/postgresql/data
+      - postgres-db:/var/lib/postgresql/
 volumes:
   postgres-db:
