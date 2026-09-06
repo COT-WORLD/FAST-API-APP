@@ -14,7 +14,7 @@ repos:
     hooks:
       - id: pytest-local
         name: Run pytest
-        entry: pytest -v -x --color=yes
+        entry: uv run pytest -v -x --color=yes
         language: system
         pass_filenames: false
         always_run: false
